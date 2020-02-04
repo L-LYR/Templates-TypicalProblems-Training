@@ -1,5 +1,6 @@
 // https://www.luogu.com.cn/problem/P3370
 // string hash template
+// luogu P3370
 
 #include <iostream>
 #include <cstring>
