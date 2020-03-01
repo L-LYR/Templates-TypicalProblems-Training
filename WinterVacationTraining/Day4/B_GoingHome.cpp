@@ -21,7 +21,7 @@ int nm, nh;                           // number of men, number of houses
 int linker[maxn], lm[maxn], lh[maxn]; // status of matching
 int slack[maxn];                      // slack operations
 bool vis_m[maxn], vis_h[maxn];        // memo
-
+// pay attention to -1 for minimum
 inline int cost(node u, node v) { return -1 * (abs(u.x - v.x) + abs(u.y - v.y)); }
 
 bool dfs(int x)
@@ -35,13 +35,13 @@ bool dfs(int x)
         if (temp == 0)
         {
             vis_h[y] = true;
-            if (linker[y] == -1 || dfs(linker[y]))
-            {
-                linker[y] = x;
+            if (linker[y] == -1 || dfs(linker[y])) // There exists a house which has no man
+            {                                      // Or the current house can hold another man
+                linker[y] = x;                     // make a match
                 return true;
             }
         }
-        else if (slack[y] > temp)
+        else if (slack[y] > temp) // expectation
             slack[y] = temp;
     }
     return false;
@@ -51,24 +51,24 @@ int km()
 {
     memset(linker, -1, sizeof(linker));
     memset(lh, 0, sizeof(lh));
+
     for (int i = 0; i < nm; ++i)
     {
         lm[i] = -inf;
         for (int j = 0; j < nh; ++j)
-        {
             lm[i] = max(g[i][j], lm[i]);
-        }
     }
-
+    // to make a match for each man
     for (int x = 0; x < nm; ++x)
     {
-        memset(slack, 0x3f, sizeof(slack));
-        while (true)
+        memset(slack, 0x3f, sizeof(slack)); // to find the minimum
+        while (true)                        // till we find a match
         {
+            // memo
             memset(vis_h, false, sizeof(vis_h));
             memset(vis_m, false, sizeof(vis_m));
 
-            if (dfs(x))
+            if (dfs(x)) // find
                 break;
 
             int d = inf;
@@ -76,21 +76,24 @@ int km()
                 if (!vis_h[i] && d > slack[i])
                     d = slack[i];
 
+            // men which have been visited --> down
             for (int i = 0; i < nm; ++i)
                 if (vis_m[i])
                     lm[i] -= d;
-
+            // houses which have been visited --> up
             for (int i = 0; i < nh; ++i)
                 if (vis_h[i])
                     lh[i] += d;
-                else
+                else // houses which haven't been visited --> down
                     slack[i] -= d;
         }
     }
+
     int ans = 0;
     for (int i = 0; i < nh; ++i)
         if (linker[i] != -1)
             ans += g[linker[i]][i];
+            
     return ans;
 }
 
@@ -120,12 +123,8 @@ int main(void)
         }
 
         for (int i = 0; i < nm; ++i)
-        {
             for (int j = 0; j < nh; ++j)
-            {
                 g[i][j] = cost(m[i], h[j]);
-            }
-        }
 
         printf("%d\n", abs(km()));
     }

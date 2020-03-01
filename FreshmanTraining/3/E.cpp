@@ -54,7 +54,7 @@ int main(void)
                             break;
                         }
                     }
-                    if (s[j] == '?') //if not juat transfer "?"
+                    if (s[j] == '?') //if not just transfer "?"
                     {
                         s[j] = t[j];
                         ++cnt;

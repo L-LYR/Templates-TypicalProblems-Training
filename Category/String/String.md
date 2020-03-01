@@ -2,7 +2,7 @@
 
 ## 字符串哈希
 
-个人理解哈希函数是一种可以将巨大的复杂的数据压缩成较小的便于存储的或者更好比较的数据。字符串哈希便是将字符串转换成十进制整数的函数，便于进一步的比较查找操作，这里最好尽量做到字符串对应唯一的哈希值。
+个人理解哈希函数是一种可以将巨大的复杂的数据压缩成较小的便于存储的或者更好比较的数据。字符串哈希便是将字符串转换成十进制整数的函数，便于进一步的比较查找操作，这里最好尽量做到字符串对应唯一的哈希值。同时显而易见的是计算哈希值的时间复杂度为$O(L)$，$L$为字符串长，空间复杂度$O(1)$。
 
 > A hash function is any function that can be used to map data of arbitrary size to fixed-size values. The values returned by a hash function are called hash values, hash codes, digests, or simply hashes. The values are used to index a fixed-size table called a hash table. Use of a hash function to index a hash table is called hashing or scatter storage addressing.
 >
@@ -120,5 +120,60 @@ graph TD
 如上图所示，结构一目了然，接下来进行实现。
 
 ```c++
+struct normalTrie
+{
+    const static int maxn = 2000005;
+    const static int maxalpha = 30; // max-number of sons
+
+    int t[maxn][maxalpha]; // nodes, s[i][j] means node i-th's j-th son
+    int sum[maxn];         // the number of words beginning with "xxx"
+    bool isWord[maxn];
+    int tot;
+
+    void init()
+    {
+        memset(t, 0, sizeof(t));
+        memset(sum, 0, sizeof(sum));
+        memset(isWord, false, sizeof(isWord));
+        tot = 0;
+    }
+
+    void insert(char *str)
+    {
+        int len = strlen(str);
+        int p = 0;
+        for (int i = 0; i < len; i++)
+        {
+            int c = str[i] - '0';
+            if (t[p][c] == 0)
+                t[p][c] = ++tot;
+            p = t[p][c];
+            sum[p]++;
+        }
+        isWord[p] = true;
+    }
+
+    int find(char *str)
+    {
+        int len = strlen(str);
+        int p = 0;
+        for (int i = 0; i < len; i++)
+        {
+            int c = str[i] - '0';
+            if (t[p][c] == 0)
+                return 0;
+            p = t[p][c];
+        }
+        return sum[p];
+    }
+
+    void insert(string str) { this->find(str.c_str()); }
+    int find(string str) { return this->find(str.c_str()); }
+
+} trie;
 
 ```
+
+### 性能分析
+
+字典树的查找和插入单词的时间复杂度都是$O(L)$，这个$L$是单词的长度。它比哈希表更优吗？看似哈希表查找和插入均为$O(1)$，事实上，哈希表在针对字符串进行查询和插入操作之前，它需要事先计算该字符串的哈希值，如果将这一过程的时间算上，哈希表的查询与c插入操作均为$O(L)$，略逊于字典树。而对于空间复杂度，字典树在字符种类有限的情况下表现更优。

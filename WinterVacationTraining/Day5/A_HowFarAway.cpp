@@ -35,7 +35,7 @@ struct query
     int q, next;
     int id;
 } q[maxn * 2];
-int h[maxn], cnt, Q;
+int h[maxn], cnt;
 void addQuery(int u, int v, int id)
 {
     q[cnt].q = v;

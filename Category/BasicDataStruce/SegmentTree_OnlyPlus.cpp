@@ -1,88 +1,94 @@
-#include <bits/stdc++.h>
+//https://blog.csdn.net/zearot/article/details/52280189
+//https://blog.csdn.net/zearot/article/details/48299459
+//https://www.zhihu.com/search?type=content&q=zkw%E7%BA%BF%E6%AE%B5%E6%A0%91
+#include <iostream>
+#include <cstring>
 using namespace std;
+using ll = long long;
 #define MAXN 100001
 
-long long arr[MAXN];
-long long segTree[MAXN * 4];
-long long tag[MAXN * 4];
+ll arr[MAXN], segTree[MAXN << 2], tag[MAXN << 2];
 
-inline int left_son(int parent) { return parent << 1; }
-inline int right_son(int parent) { return (parent << 1) | 1; }
-inline void push_up_sum(int parent) { segTree[parent] = segTree[left_son(parent)] + segTree[right_son(parent)]; }
+inline int ls(int p) { return p << 1; }
+inline int rs(int p) { return (p << 1) | 1; }
+inline void pushUp(int p) { segTree[p] = segTree[ls(p)] + segTree[rs(p)]; }
 
-// inline void push_up_min(int parent) { segTree[parent] = min(segTree[left_son(parent)], segTree[right_son(parent)]); }
-// inline void push_up_max(int parent) { segTree[parent] = max(segTree[left_son(parent)], segTree[right_son(parent)]); }
-
-void build(int parent, int left, int right)
+void build(int p, int l, int r)
 {
-    if (left == right)
+    if (l == r)
     {
-        segTree[parent] = arr[left];
+        segTree[p] = arr[l];
         return;
     }
-
-    int mid = left + ((right - left) >> 1);
-    build(left_son(parent), left, mid);
-    build(right_son(parent), mid + 1, right);
-    //PushUp
-    push_up_sum(parent);
+    int mid = (l + r) >> 1;
+    build(ls(p), l, mid);
+    build(rs(p), mid + 1, r);
+    pushUp(p);
 }
 
-inline void modify_cur(int parent, int left, int right, long long delta)
+inline void modify(int p, int l, int r, ll d)
 {
-    tag[parent] += delta;
-    segTree[parent] += (right - left + 1) * delta;
+    tag[p] += d;
+    segTree[p] += (r - l + 1) * d;
 }
 
-inline void push_down(int parent, int left, int right)
+inline void pushDown(int p, int l, int r)
 {
-    int mid = left + ((right - left) >> 1);
-    modify_cur(left_son(parent), left, mid, tag[parent]);
-    modify_cur(right_son(parent), mid + 1, right, tag[parent]);
-    tag[parent] = 0;
+    int mid = (l + r) >> 1;
+    modify(ls(p), l, mid, tag[p]);
+    modify(rs(p), mid + 1, r, tag[p]);
+    tag[p] = 0;
 }
+// // update index i-th
+// void add(int i, int p, int l, int r, int d)
+// {
+//     if (l == r)
+//     {
+//         segTree[p] += d;
+//         return;
+//     }
+//     int mid = (l + r) >> 1;
+//     // pushDown(p, mid - l + 1, r - mid); // both add and update needed
+//     if (i <= mid)
+//         add(i, ls(p), l, mid, d);
+//     else
+//         add(i, rs(p), mid + 1, r, d);
+//     pushUp(p);
+// }
 
-void update(int interval_left, int interval_right, int parent, int left, int right, long long delta)
+// update interval [il, ir]
+void update(int il, int ir, int p, int l, int r, ll d)
 {
-    if (left >= interval_left && right <= interval_right)
+    if (il <= l && r <= ir)
     {
-        tag[parent] += delta;
-        segTree[parent] += (right - left + 1) * delta;
+        tag[p] += d;
+        segTree[p] += (r - l + 1) * d;
         return;
     }
-    push_down(parent, left, right);
+    pushDown(p, l, r);
+    int mid = (l + r) >> 1;
+    if (il <= mid)
+        update(il, ir, ls(p), l, mid, d);
+    if (ir > mid)
+        update(il, ir, rs(p), mid + 1, r, d);
 
-    int mid = left + ((right - left) >> 1);
-
-    if (interval_left <= mid)
-        update(interval_left, interval_right,
-               left_son(parent), left, mid, delta);
-
-    if (interval_right > mid)
-        update(interval_left, interval_right,
-               right_son(parent), mid + 1, right, delta);
-
-    push_up_sum(parent);
+    pushUp(p);
 }
 
-long long query(int qLeft, int qRight, int parent, int left, int right)
+ll query(int ql, int qr, int p, int l, int r)
 {
-    long long res = 0;
-    
-    if (qLeft <= left && right <= qRight)
-        return segTree[parent];
-        
-    int mid = left + ((right - left) >> 1);
-    push_down(parent, left, right);
+    ll res = 0;
 
-    if (qLeft <= mid)
-        res += query(qLeft, qRight, left_son(parent),
-                     left, mid);
+    if (ql <= l && r <= qr)
+        return segTree[p];
 
-    if (qRight > mid)
-        res += query(qLeft, qRight, right_son(parent),
-                     mid + 1, right);
+    int mid = (l + r) >> 1;
+    pushDown(p, l, r);
 
+    if (ql <= mid)
+        res += query(ql, qr, ls(p), l, mid);
+    if (qr > mid)
+        res += query(ql, qr, rs(p), mid + 1, r);
     return res;
 }
 
@@ -94,7 +100,7 @@ int main(void)
         cin >> arr[i];
     build(1, 1, N);
     int opt, x, y;
-    long long k;
+    ll k;
     for (i = 0; i < M; ++i)
     {
         cin >> opt;
