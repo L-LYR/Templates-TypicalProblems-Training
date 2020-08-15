@@ -33,17 +33,22 @@
 
 // sliding-window
 // O(n)
-class Solution {
+class Solution
+{
 public:
-    int lengthOfLongestSubstring(string s) {
+    int lengthOfLongestSubstring(string s)
+    {
         int len = s.length();
-        if(len == 0) return 0;
+        if (len == 0)
+            return 0;
 
         int ans = 0, l = 0, r = 0;
         set<char> alpha;
 
-        while(r < len) {
-            while(alpha.count(s[r])){
+        while (r < len)
+        {
+            while (alpha.count(s[r]))
+            {
                 alpha.erase(s[l]);
                 ++l;
             }
@@ -57,4 +62,3 @@ public:
     }
 };
 // @lc code=end
-
