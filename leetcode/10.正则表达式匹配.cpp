@@ -11,7 +11,6 @@ public:
     bool isMatch(string s, string p) {
         int n = s.length(), m = p.length();
         bool dp[n + 1][m + 1];
-
         memset(dp, false, sizeof(dp));
         dp[0][0] = true; // basic case: s = "" and p = ""
         for (int i = 0; i < m; ++i) { // initialization
