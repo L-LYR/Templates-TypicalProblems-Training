@@ -20,6 +20,12 @@ int main(void) {
     int k = (m + n) / 2;
     if ((m + n) % 2) k++;
 
+    // Slower but more simple
+    // a.reserve(m + n);
+    // a.insert(a.end(), b.begin(), b.end());
+    // nth_element(a.begin(), a.begin() + k, a.end());
+    // cout << a[k] << endl;
+
     int l = max(0, k - m), r = min(k, n);
     while (l < r) {
         int mid = (l + r) / 2;

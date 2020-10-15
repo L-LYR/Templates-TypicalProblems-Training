@@ -22,7 +22,7 @@ int main(void)
     // Suppose that there are m circles without number 0, we can generate the answer as below:
     //                                   n * (ei - 1) + 2 * m
 
-    int ans = 0, i = 0, c = 0;
+    int ans = 0, c = 0;
     if (vi[0] != 0)
         c = -1;
     for (int i = 0; i < n; ++i)
