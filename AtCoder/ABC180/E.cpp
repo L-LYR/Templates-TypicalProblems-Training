@@ -33,15 +33,13 @@ int main(void) {
 
     int lim = 1 << n;
     int ans = inf;
-    for (int i = 0; i < lim; ++i) {
-        for (int j = 0; j < n; ++j) {
-            dp[i][j] = inf;
-        }
-    }
+    memset(dp, 0x3f, sizeof(dp));
     dp[1][0] = 0;
     for (int i = 1; i < lim; ++i) {
         for (int j = 1; j < n; ++j) {
+
             if (i & (1 << j) || !(i & 1)) continue;
+
             for (int k = 0; k < n; ++k) {
                 if (i & (1 << k)) {
                     dp[(1 << j) | i][j] =
@@ -51,9 +49,8 @@ int main(void) {
         }
     }
 
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
         ans = min(dp[lim - 1][i] + c[i][0], ans);
-    }
 
     cout << ans << endl;
 
