@@ -12,13 +12,14 @@ int main(void) {
     scanf("%d", &n);
     for (int i = 1; i <= n; ++i)
         scanf("%lld", a + i);
-
+    // calculate all the steps and the fathest position.
     for (int i = 1; i <= n; ++i) {
         sum[i] += sum[i - 1] + a[i];
         max_sum[i] = max(sum[i], max_sum[i - 1]);
     }
 
     ll ans = 0, cur = 0;
+    // traverse all the steps and find the fathest position
     for (int i = 1; i <= n; ++i) {
         ans = max(ans, cur + max_sum[i]);
         cur += sum[i];

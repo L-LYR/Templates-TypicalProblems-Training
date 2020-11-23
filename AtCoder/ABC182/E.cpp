@@ -20,6 +20,9 @@ int main(void) {
         grid[a][b] = -1;
     }
     int ans = 0;
+    // for each bulb,
+    // make the cross light
+    // if the light reaches a bulb or block, just stop
     for (int i = 0; i < n; ++i) {
         for (int j = x[i] + 1; j <= h; ++j) {
             if (grid[j][y[i]] == -1) break;
