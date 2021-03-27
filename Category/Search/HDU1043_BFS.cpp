@@ -1,6 +1,6 @@
 // Time: 03/24/21
 // Author: HammerLi
-// Tags: [Search]
+// Tags: [Search] [BFS]
 #include <bits/stdc++.h>
 using namespace std;
 

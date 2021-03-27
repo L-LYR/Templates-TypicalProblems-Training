@@ -1,11 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-
-using std::cout;
-using std::endl;
-using std::is_sorted;
-using std::vector;
+using namespace std;
 
 const int max_length = 10;
 const int max_value = 1e3;

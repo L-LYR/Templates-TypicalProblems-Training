@@ -1,18 +1,13 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-
-using std::cout;
-using std::endl;
-using std::vector;
-using std::copy;
-using std::next;
+using namespace std;
 
 const int max_length = 5;
 const int max_value = 1e3;
 
-auto __merge_sort_count(vector<int>& nums, vector<int>& tmp, int lo, int hi,
-                        int& cnt) -> void {
+auto __merge_sort_count(vector<int>& nums, vector<int>& tmp, int lo, int hi, int& cnt)
+    -> void {
     if (lo >= hi) {
         return;
     }
@@ -34,7 +29,7 @@ auto __merge_sort_count(vector<int>& nums, vector<int>& tmp, int lo, int hi,
     while (j <= hi) tmp[k++] = nums[j++];
 
     copy(next(tmp.begin(), lo), next(tmp.begin(), hi + 1),
-         next(nums.begin(), lo));
+              next(nums.begin(), lo));
 }
 
 auto count_reverse_pairs(vector<int>& nums) -> int {

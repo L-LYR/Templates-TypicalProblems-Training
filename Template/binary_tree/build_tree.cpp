@@ -1,17 +1,9 @@
 #include <functional>
 #include <iostream>
-#include <queue>
 #include <stack>
 #include <unordered_map>
 #include <vector>
-
-using std::queue;
-using std::unordered_map;
-using std::vector;
-using std::stack;
-using std::cout;
-using std::endl;
-using std::function;
+using namespace std;
 
 struct TreeNode {
     int val;
@@ -21,8 +13,7 @@ struct TreeNode {
 };
 
 auto rebuild_from_preorder_inorder_with_stack(const vector<int> preorder,
-                                              const vector<int> inorder)
-    -> TreeNode * {
+                                              const vector<int> inorder) -> TreeNode * {
     if (inorder.empty() || preorder.empty()) return nullptr;
 
     int idx = 0;
@@ -53,8 +44,7 @@ auto rebuild_from_preorder_inorder_with_stack(const vector<int> preorder,
 }
 
 auto rebuild_from_inorder_postorder_with_stack(const vector<int> &inorder,
-                                               const vector<int> &postorder)
-    -> TreeNode * {
+                                               const vector<int> &postorder) -> TreeNode * {
     if (inorder.empty() || postorder.empty()) return nullptr;
     TreeNode *root = new TreeNode(postorder.back());
     TreeNode *cur;
@@ -80,8 +70,7 @@ auto rebuild_from_inorder_postorder_with_stack(const vector<int> &inorder,
 }
 
 auto rebuild_from_preorder_postorder_with_stack(const vector<int> &preorder,
-                                                const vector<int> &postorder)
-    -> TreeNode * {
+                                                const vector<int> &postorder) -> TreeNode * {
     if (preorder.empty() || postorder.empty()) return NULL;
 
     unordered_map<int, int> m;
@@ -111,13 +100,11 @@ auto rebuild_from_preorder_postorder_with_stack(const vector<int> &preorder,
 }
 
 auto rebuild_from_preorder_postorder_recursive(const vector<int> &preorder,
-                                               const vector<int> &postorder)
-    -> TreeNode * {
+                                               const vector<int> &postorder) -> TreeNode * {
     function<TreeNode *(int, int, int, int)> rebuild;
     rebuild = [&](int preorder_lo, int preorder_hi, int postorder_lo,
                   int postorder_hi) -> TreeNode * {
-        if (preorder_lo > preorder_hi || postorder_lo > postorder_hi)
-            return nullptr;
+        if (preorder_lo > preorder_hi || postorder_lo > postorder_hi) return nullptr;
         TreeNode *cur = new TreeNode(preorder[preorder_lo]);
         if (preorder_lo == preorder_hi) return cur;
 
@@ -125,18 +112,15 @@ auto rebuild_from_preorder_postorder_recursive(const vector<int> &preorder,
         while (postorder[i] != preorder[preorder_lo + 1]) i++;
         int len = i - postorder_lo + 1;
 
-        cur->left =
-            rebuild(preorder_lo + 1, preorder_lo + len, postorder_lo, i);
-        cur->right = rebuild(preorder_lo + 1 + len, preorder_hi, i + 1,
-                             postorder_hi - 1);
+        cur->left = rebuild(preorder_lo + 1, preorder_lo + len, postorder_lo, i);
+        cur->right = rebuild(preorder_lo + 1 + len, preorder_hi, i + 1, postorder_hi - 1);
         return cur;
     };
     return rebuild(0, preorder.size() - 1, 0, postorder.size() - 1);
 }
 
 auto rebuild_from_preorder_inorder_recursive(const vector<int> &preorder,
-                                             const vector<int> &inorder)
-    -> TreeNode * {
+                                             const vector<int> &inorder) -> TreeNode * {
     function<TreeNode *(int, int, int, int)> rebuild;
     rebuild = [&](int pl, int pr, int il, int ir) -> TreeNode * {
         if (pl > pr || il > ir) return nullptr;
@@ -154,8 +138,7 @@ auto rebuild_from_preorder_inorder_recursive(const vector<int> &preorder,
 }
 
 auto rebuild_from_inorder_postorder_recursive(const vector<int> &inorder,
-                                              const vector<int> &postorder)
-    -> TreeNode * {
+                                              const vector<int> &postorder) -> TreeNode * {
     function<TreeNode *(int, int, int, int)> rebuild;
     rebuild = [&](int pl, int pr, int il, int ir) -> TreeNode * {
         if (pl > pr || il > ir) return nullptr;

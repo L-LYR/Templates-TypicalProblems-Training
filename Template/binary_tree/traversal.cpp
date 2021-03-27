@@ -2,12 +2,7 @@
 #include <queue>
 #include <stack>
 #include <vector>
-
-using std::queue;
-using std::vector;
-using std::stack;
-using std::cout;
-using std::endl;
+using namespace std;
 
 struct TreeNode {
     int val;
